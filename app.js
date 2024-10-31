@@ -15,6 +15,8 @@ mongoose
 
 const { PORT = 3001 } = process.env;
 
+app.use(express.json());
+
 app.use("/", mainRouter);
 
 app.listen(PORT, () => {
