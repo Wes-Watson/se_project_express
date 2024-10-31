@@ -21,8 +21,9 @@ const createItem = (req, res) => {
       console.error(err.name);
       if (err.name === "ValidationError") {
         return res.status(err400.status).send({ message: err.message });
+      } else {
+        return res.status(err500.status).send({ message: err.message });
       }
-      return res.status(err500.status).send({ message: err.message });
     });
 };
 
@@ -39,11 +40,11 @@ const deleteItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(err404.status).send({ message: err404.message });
-      }
-      if (err.name === "CastError") {
+      } else if (err.name === "CastError") {
         return res.status(err400.status).send({ message: err400.message });
+      } else {
+        return res.status(err500.status).send({ message: err.message });
       }
-      return res.status(err500.status).send({ message: err.message });
     });
 };
 
@@ -65,8 +66,9 @@ const likeItem = (req, res) => {
         res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
         res.status(err404.status).send({ message: err404.message });
+      } else {
+        return res.status(err500.status).send({ message: err.message });
       }
-      return res.status(err500.status).send({ message: err.message });
     });
 };
 
@@ -88,8 +90,9 @@ const unlikeItem = (req, res) => {
         res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
         return res.status(err404.status).send({ message: err404.message });
+      } else {
+        return res.status(err500.status).send({ message: err.message });
       }
-      return res.status(err500.status).send({ message: err.message });
     });
 };
 
