@@ -36,7 +36,7 @@ const deleteItem = (req, res) => {
         .then(() => res.status(200).send({ message: "Item Deleted" }))
     )
     .catch((err) => {
-      console.error(err.name);
+      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(err404.status).send({ message: err404.message });
       }
