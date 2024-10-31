@@ -13,6 +13,13 @@ mongoose
   })
   .catch(console.error);
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: "6723b4f91d07e3e0b7f5604b",
+  };
+  next();
+});
+
 const { PORT = 3001 } = process.env;
 
 app.use(express.json());
