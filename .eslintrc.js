@@ -1,5 +1,3 @@
-
-
 module.exports = {
   env: {
     es2021: true,
@@ -21,5 +19,5 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: { "no-underscore-dangle": "off"},
+  rules: { "no-underscore-dangle": "off", "no-console": "off" },
 };
