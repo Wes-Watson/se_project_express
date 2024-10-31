@@ -1,4 +1,3 @@
-const clothingItem = require("../models/clothingItem");
 const ClothingItem = require("../models/clothingItem");
 const { err400, err404, err500 } = require("../utils/errors");
 
@@ -61,11 +60,11 @@ const likeItem = (req, res) => {
     .catch((err) => {
       console.error(err.name);
       if (err.name === "ValidationError") {
-        return res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err.message });
       } else if (err.name === "CastError") {
-        return res.status(err400.status).send({ message: err400.message });
+        res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
-        return res.status(err404.status).send({ message: err404.message });
+        res.status(err404.status).send({ message: err404.message });
       }
       return res.status(err500.status).send({ message: err.message });
     });
@@ -84,9 +83,9 @@ const unlikeItem = (req, res) => {
     .catch((err) => {
       console.error(err.name);
       if (err.name === "ValidationError") {
-        return res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err.message });
       } else if (err.name === "CastError") {
-        return res.status(err400.status).send({ message: err400.message });
+        res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
         return res.status(err404.status).send({ message: err404.message });
       }
