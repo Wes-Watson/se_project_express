@@ -20,10 +20,11 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error(err.name);
       if (err.name === "ValidationError") {
-        return res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err.message });
       } else {
         return res.status(err500.status).send({ message: err.message });
       }
+      return err;
     });
 };
 
@@ -39,12 +40,13 @@ const deleteItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(err404.status).send({ message: err404.message });
+        res.status(err404.status).send({ message: err404.message });
       } else if (err.name === "CastError") {
-        return res.status(err400.status).send({ message: err400.message });
+        res.status(err400.status).send({ message: err400.message });
       } else {
         return res.status(err500.status).send({ message: err.message });
       }
+      return err;
     });
 };
 
@@ -59,7 +61,7 @@ const likeItem = (req, res) => {
       res.status(200).send(like);
     })
     .catch((err) => {
-      console.error(err.name);
+      console.error(err);
       if (err.name === "ValidationError") {
         res.status(err400.status).send({ message: err.message });
       } else if (err.name === "CastError") {
@@ -67,8 +69,9 @@ const likeItem = (req, res) => {
       } else if (err.name === "DocumentNotFoundError") {
         res.status(err404.status).send({ message: err404.message });
       } else {
-        return res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message: err.message });
       }
+      return err;
     });
 };
 
@@ -83,16 +86,17 @@ const unlikeItem = (req, res) => {
       res.status(200).send(unlike);
     })
     .catch((err) => {
-      console.error(err.name);
+      console.error(err);
       if (err.name === "ValidationError") {
         res.status(err400.status).send({ message: err.message });
       } else if (err.name === "CastError") {
         res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
-        return res.status(err404.status).send({ message: err404.message });
+        res.status(err404.status).send({ message: err404.message });
       } else {
-        return res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message: err.message });
       }
+      return err;
     });
 };
 
