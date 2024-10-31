@@ -48,4 +48,50 @@ const deleteItem = (req, res) => {
     });
 };
 
-module.exports = { getItems, createItem, deleteItem };
+const likeItem = (req, res) => {
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+    { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
+    { new: true }
+  )
+    .orFail()
+    .then((like) => {
+      res.status(200).send(like);
+    })
+    .catch((err) => {
+      console.error(err.name);
+      if (err.name === "ValidationError") {
+        return res.status(err400.status).send({ message: err.message });
+      } else if (err.name === "CastError") {
+        return res.status(err400.status).send({ message: err400.message });
+      } else if (err.name === "DocumentNotFoundError") {
+        return res.status(err404.status).send({ message: err404.message });
+      }
+      return res.status(err500.status).send({ message: err.message });
+    });
+};
+
+const unlikeItem = (req, res) => {
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  )
+    .orFail()
+    .then((unlike) => {
+      res.status(200).send(unlike);
+    })
+    .catch((err) => {
+      console.error(err.name);
+      if (err.name === "ValidationError") {
+        return res.status(err400.status).send({ message: err.message });
+      } else if (err.name === "CastError") {
+        return res.status(err400.status).send({ message: err400.message });
+      } else if (err.name === "DocumentNotFoundError") {
+        return res.status(err404.status).send({ message: err404.message });
+      }
+      return res.status(err500.status).send({ message: err.message });
+    });
+};
+
+module.exports = { getItems, createItem, deleteItem, likeItem, unlikeItem };
