@@ -6,7 +6,7 @@ const getItems = (req, res) => {
     .then((items) => res.status(200).send(items))
     .catch((err) => {
       console.error(err);
-      return res.status(err500.status).send({ message: err.message });
+      return res.status(err500.status).send({ message: err500.message });
     });
 };
 
@@ -20,11 +20,10 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error(err.name);
       if (err.name === "ValidationError") {
-        res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err400.message });
       } else {
-        return res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message500: err.message });
       }
-      return err;
     });
 };
 
@@ -35,7 +34,7 @@ const deleteItem = (req, res) => {
     .then((item) =>
       item
         .remove()
-        .then(() => res.status(200).send({ message: "Item Deleted" }))
+        .then(() => res.status(200).send({ message: "Item Deleted" })),
     )
     .catch((err) => {
       console.error(err);
@@ -44,9 +43,8 @@ const deleteItem = (req, res) => {
       } else if (err.name === "CastError") {
         res.status(err400.status).send({ message: err400.message });
       } else {
-        return res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message: err500.message });
       }
-      return err;
     });
 };
 
@@ -54,7 +52,7 @@ const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((like) => {
@@ -63,15 +61,14 @@ const likeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "CastError") {
         res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
         res.status(err404.status).send({ message: err404.message });
       } else {
-        res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message: err500.message });
       }
-      return err;
     });
 };
 
@@ -79,7 +76,7 @@ const unlikeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((unlike) => {
@@ -88,15 +85,14 @@ const unlikeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "CastError") {
         res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
         res.status(err404.status).send({ message: err404.message });
       } else {
-        res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message: err500.message });
       }
-      return err;
     });
 };
 

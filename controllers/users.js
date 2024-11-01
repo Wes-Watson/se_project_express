@@ -6,7 +6,7 @@ const getUsers = (req, res) => {
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      return res.status(err500.status).send({ message: err.message });
+      return res.status(err500.status).send({ message: err500.message });
     });
 };
 
@@ -17,11 +17,10 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err400.message });
       } else {
-        res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message: err500.message });
       }
-      return err;
     });
 };
 
@@ -33,13 +32,12 @@ const getUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        res.status(err404.status).send({ message: err.message });
+        res.status(err404.status).send({ message: err404.message });
       } else if (err.name === "CastError") {
-        res.status(err400.status).send({ message: err.message });
+        res.status(err400.status).send({ message: err400.message });
       } else {
-        res.status(err500.status).send({ message: err.message });
+        res.status(err500.status).send({ message: err500.message });
       }
-      return err;
     });
 };
 
