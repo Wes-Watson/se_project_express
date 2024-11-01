@@ -7,7 +7,7 @@ const { err404 } = require("../utils/errors");
 router.use("/users", userRouter);
 router.use("/items", clothingItemsRouter);
 router.use((req, res) => {
-  res.status(err404).send({
+  res.status(err404.status).send({
     message: "Requested resource not found",
   });
 });
