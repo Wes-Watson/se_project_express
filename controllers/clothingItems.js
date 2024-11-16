@@ -1,5 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const { err400, err404, err500 } = require("../utils/errors");
+const { err400, err404, err403, err500 } = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -31,11 +31,17 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
   ClothingItem.findById(itemId)
     .orFail()
-    .then((item) =>
-      item
-        .remove()
-        .then(() => res.status(200).send({ message: "Item Deleted" })),
-    )
+    .then((item) => {
+      if (item.owner.toString() !== req.user._id.toString()) {
+        return res
+          .status(err403)
+          .send({ message: "User does not own this item" });
+      } else {
+        item
+          .remove()
+          .then(() => res.status(200).send({ message: "Item Deleted" }));
+      }
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
