@@ -20,9 +20,8 @@ const { PORT = 3001 } = process.env;
 app.use(express.json());
 app.use(cors());
 
+app.use("/", mainRouter);
 app.post("/signin", login);
 app.post("/signup", createUser);
-
-app.use("/", mainRouter);
 
 app.listen(PORT, () => {});
