@@ -2,7 +2,7 @@ const User = require("../models/user");
 const { err400, err401, err404, err409, err500 } = require("../utils/errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = require("../utils/config");
+const {JWT_SECRET} = require("../utils/config");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -69,6 +69,8 @@ const login = (req, res) => {
         res
           .status(err401.status)
           .send({ message: "Incorrect Email or Password" });
+      } else {
+        res.status(err500.status).send({ message: err500.message });
       }
     });
 };

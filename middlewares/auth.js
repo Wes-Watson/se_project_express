@@ -6,6 +6,7 @@ const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
+    console.log(req.headers, authorization);
     return res.status(err401.status).send({ message: err401.message });
   }
 
