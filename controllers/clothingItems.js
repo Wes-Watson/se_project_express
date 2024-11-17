@@ -29,13 +29,12 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
+  console.log();
   ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id.toString()) {
-        return res
-          .status(err403)
-          .send({ message: "User does not own this item" });
+        res.status(err403.status).send({ message: err403.message });
       } else {
         item
           .remove()

@@ -2,7 +2,7 @@ const User = require("../models/user");
 const { err400, err401, err404, err409, err500 } = require("../utils/errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const {JWT_SECRET} = require("../utils/config");
+const { JWT_SECRET } = require("../utils/config");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -65,11 +65,12 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.message === "Incorrect Email or Password") {
+      if (err.message === "Incorrect email or password") {
         res
           .status(err401.status)
           .send({ message: "Incorrect Email or Password" });
       } else {
+        console.log(err.message);
         res.status(err500.status).send({ message: err500.message });
       }
     });
@@ -120,4 +121,4 @@ const updateProfile = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getCurrentUser, login };
+module.exports = { getUsers, createUser, getCurrentUser, login, updateProfile };
