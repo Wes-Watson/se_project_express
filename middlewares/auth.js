@@ -5,7 +5,7 @@ const { err401 } = require("../utils/errors");
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith("Bearer ")) {
+  if (!authorization) {
     return res.status(err401.status).send({ message: err401.message });
   }
 
@@ -19,7 +19,7 @@ const auth = (req, res, next) => {
   }
 
   req.user = payload;
-  next();
+  return next();
 };
 
 module.exports = auth;

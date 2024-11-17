@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const { err400, err401, err404, err500 } = require("../utils/errors");
+const { err400, err401, err404, err409, err500 } = require("../utils/errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = require("../utils/config");
@@ -27,17 +27,21 @@ const createUser = (req, res) => {
     .then((hashedPassword) =>
       User.create({ name, avatar, email, password: hashedPassword }),
     )
-    .then((user) =>
-      res
-        .status(201)
-        .send({ user: user.name, avatar: user.avatar, email: user.email }),
-    )
+    .then((user) => {
+      res.status(201).send({
+        name: user.name,
+        avatar: user.avatar,
+        email: user.email,
+      });
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
         res.status(err400.status).send({ message: err400.message });
       } else if (err.code === 11000) {
-        res.status(err.status).send({ message: "This Email Already Exists" });
+        res
+          .status(err409.status)
+          .send({ message: "This Email Already Exists" });
       } else {
         res.status(err500.status).send({ message: err500.message });
       }
@@ -62,7 +66,7 @@ const login = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.message === "Incorrect Email or Password") {
-        return res
+        res
           .status(err401.status)
           .send({ message: "Incorrect Email or Password" });
       }
