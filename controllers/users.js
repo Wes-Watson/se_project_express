@@ -1,7 +1,7 @@
-const User = require("../models/user");
-const { err400, err401, err404, err409, err500 } = require("../utils/errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const { err400, err401, err404, err409, err500 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
 const getUsers = (req, res) => {

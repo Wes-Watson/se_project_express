@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-//const { unique } = require("prelude-ls");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 
@@ -20,7 +19,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: function (value) {
+      validator(value) {
         return validator.isEmail(value);
       },
       message: "You must enter a valid Email",
