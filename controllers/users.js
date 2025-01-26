@@ -3,14 +3,19 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { err400, err401, err404, err409, err500 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
+const BadRequestError = require("../errors/BadRequestError");
+const ConflictError = require("../errors/ConflictError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
+const NotFoundError = require("../errors/NotFoundError");
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(err400.status)
-      .send({ message: "Email and Password are Required" });
+    next(new BadRequestError("Email and Password are Required"));
+    //return res
+    //.status(err400.status)
+    //.send({ message: "Email and Password are Required" });
   }
 
   return bcrypt
@@ -28,13 +33,16 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        res.status(err400.status).send({ message: err400.message });
+        next(new BadRequestError(err400.message));
+        //res.status(err400.status).send({ message: err400.message });
       } else if (err.code === 11000) {
-        res
-          .status(err409.status)
-          .send({ message: "This Email Already Exists" });
+        next(new ConflictError(err409.message));
+        // res
+        //.status(err409.status)
+        //.send({ message: "This Email Already Exists" });
       } else {
-        res.status(err500.status).send({ message: err500.message });
+        next(err);
+        // res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -42,9 +50,10 @@ const createUser = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(err400.status)
-      .send({ message: "Email and Password are Required" });
+    next(new BadRequestError("Email and Password are Required"));
+    //return res
+    //.status(err400.status)
+    //.send({ message: "Email and Password are Required" });
   }
 
   return User.findUserByCredentials(email, password)
@@ -57,12 +66,14 @@ const login = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.message === "Incorrect email or password") {
-        res
-          .status(err401.status)
-          .send({ message: "Incorrect Email or Password" });
+        next(new UnauthorizedError("Incorrect Email or Password"));
+        //res
+        //.status(err401.status)
+        //.send({ message: "Incorrect Email or Password" });
       } else {
-        console.log(err.message);
-        res.status(err500.status).send({ message: err500.message });
+        next(err);
+        //console.log(err.message);
+        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -77,11 +88,14 @@ const getCurrentUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        res.status(err404.status).send({ message: err404.message });
+        next(new NotFoundError(err404.message));
+        //res.status(err404.status).send({ message: err404.message });
       } else if (err.name === "CastError") {
-        res.status(err400.status).send({ message: err400.message });
+        next(new BadRequestError(err400.message));
+        //res.status(err400.status).send({ message: err400.message });
       } else {
-        res.status(err500.status).send({ message: err500.message });
+        next(err);
+        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -103,11 +117,14 @@ const updateProfile = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        res.status(err404.status).send({ message: err404.message });
+        next(new NotFoundError(err404.message));
+        //res.status(err404.status).send({ message: err404.message });
       } else if (err.name === "ValidationError") {
-        res.status(err400.status).send({ message: err400.message });
+        next(new BadRequestError(err400.message));
+        //res.status(err400.status).send({ message: err400.message });
       } else {
-        res.status(err500.status).send({ message: err500.message });
+        next(err);
+        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };
