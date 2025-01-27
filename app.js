@@ -13,6 +13,9 @@ const errorHandler = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
 
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { JWT_SECRET } = require("./utils/config");
+
+require('dotenv').config();
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
