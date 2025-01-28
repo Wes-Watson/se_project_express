@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { err400, err401, err404, err409, err500 } = require("../utils/errors");
+const { err400, err404, err409 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 const BadRequestError = require("../errors/BadRequestError");
 const ConflictError = require("../errors/ConflictError");
@@ -13,9 +13,6 @@ const createUser = (req, res, next) => {
 
   if (!email || !password) {
     next(new BadRequestError("Email and Password are Required"));
-    //return res
-    //.status(err400.status)
-    //.send({ message: "Email and Password are Required" });
   }
 
   return bcrypt
@@ -34,15 +31,10 @@ const createUser = (req, res, next) => {
       console.error(err);
       if (err.name === "ValidationError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else if (err.code === 11000) {
         next(new ConflictError(err409.message));
-        // res
-        //.status(err409.status)
-        //.send({ message: "This Email Already Exists" });
       } else {
         next(err);
-        // res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -51,9 +43,6 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     next(new BadRequestError("Email and Password are Required"));
-    //return res
-    //.status(err400.status)
-    //.send({ message: "Email and Password are Required" });
   }
 
   return User.findUserByCredentials(email, password)
@@ -67,13 +56,8 @@ const login = (req, res, next) => {
       console.error(err);
       if (err.message === "Incorrect email or password") {
         next(new UnauthorizedError("Incorrect Email or Password"));
-        //res
-        //.status(err401.status)
-        //.send({ message: "Incorrect Email or Password" });
       } else {
         next(err);
-        //console.log(err.message);
-        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -89,13 +73,10 @@ const getCurrentUser = (req, res, next) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError(err404.message));
-        //res.status(err404.status).send({ message: err404.message });
       } else if (err.name === "CastError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else {
         next(err);
-        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -118,13 +99,10 @@ const updateProfile = (req, res, next) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError(err404.message));
-        //res.status(err404.status).send({ message: err404.message });
       } else if (err.name === "ValidationError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else {
         next(err);
-        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };

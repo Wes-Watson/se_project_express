@@ -1,5 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const { err400, err404, err403, err500 } = require("../utils/errors");
+const { err400, err404, err403 } = require("../utils/errors");
 const BadRequestError = require("../errors/BadRequestError");
 const ForbiddenError = require("../errors/ForbiddenError");
 const NotFoundError = require("../errors/NotFoundError");
@@ -9,8 +9,6 @@ const getItems = (req, res, next) => {
     .then((items) => res.status(200).send(items))
     .catch((err) => {
       next(err);
-      //console.error(err);
-      //return res.status(err500.status).send({ message: err500.message });
     });
 };
 
@@ -25,10 +23,8 @@ const createItem = (req, res, next) => {
       console.error(err.name);
       if (err.name === "ValidationError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else {
         next(err);
-        //res.status(err500.status).send({ message500: err.message });
       }
     });
 };
@@ -51,13 +47,10 @@ const deleteItem = (req, res, next) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError(err404.message));
-        //res.status(err404.status).send({ message: err404.message });
       } else if (err.name === "CastError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else {
         next(err);
-        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -65,7 +58,7 @@ const deleteItem = (req, res, next) => {
 const likeItem = (req, res, next) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
-    { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
+    { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .orFail()
@@ -76,16 +69,12 @@ const likeItem = (req, res, next) => {
       console.error(err);
       if (err.name === "ValidationError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "CastError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError(err404.message));
-        //res.status(err404.status).send({ message: err404.message });
       } else {
         next(err);
-        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };
@@ -104,16 +93,12 @@ const unlikeItem = (req, res, next) => {
       console.error(err);
       if (err.name === "ValidationError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "CastError") {
         next(new BadRequestError(err400.message));
-        //res.status(err400.status).send({ message: err400.message });
       } else if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError(err404.message));
-        //res.status(err404.status).send({ message: err404.message });
       } else {
         next(err);
-        //res.status(err500.status).send({ message: err500.message });
       }
     });
 };

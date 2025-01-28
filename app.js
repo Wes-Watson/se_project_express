@@ -15,7 +15,7 @@ const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 const { JWT_SECRET } = require("./utils/config");
 
-require('dotenv').config();
+require("dotenv").config();
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -28,6 +28,12 @@ app.use(express.json());
 app.use(cors());
 
 app.use(requestLogger);
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 
 app.use("/", mainRouter);
 
