@@ -36,12 +36,12 @@ const validateUserBody = celebrate({
       "string.empty": 'The "name" field must be filled in',
     }),
 
-    imageUrl: Joi.string().required().custom(validateURL).messages({
+    avatar: Joi.string().required().custom(validateURL).messages({
       "string.empty": 'The "imageUrl" field must be filled in',
       "string.uri": 'the "imageUrl" field must be a valid url',
     }),
 
-    email: Joi.string().required().email().unique().messages({
+    email: Joi.string().required().email().messages({
       "string.empty": "The 'email' feild must be filled in",
       "string.email": "The 'email' feild must contain a valid email address",
     }),
@@ -52,22 +52,37 @@ const validateUserBody = celebrate({
   }),
 });
 
-const validateUserlogin = celebrate({
-  body: Joi.object.keys({
-    email: Joi.string().required().email().unique().messages({
+const validateUserLogin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email().messages({
       "string.empty": "The 'email' feild must be filled in",
       "string.email": "The 'email' feild must contain a valid email address",
     }),
 
     password: Joi.string().required().messages({
       "string.empty": "The 'password' feild must be filled in",
+    }),
+  }),
+});
+
+const validateProfileUpdate = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30).messages({
+      "string.min": 'The minimum length of the "name" field is 2',
+      "string.max": 'The maximum length of the "name" field is 30',
+      "string.empty": 'The "name" field must be filled in',
+    }),
+
+    avatar: Joi.string().required().custom(validateURL).messages({
+      "string.empty": 'The "imageUrl" field must be filled in',
+      "string.uri": 'the "imageUrl" field must be a valid url',
     }),
   }),
 });
 
 const validateUserId = celebrate({
-  params: Joi.object.keys({
-    id: Joi.string().length(24).hex().required().messages({
+  params: Joi.object().keys({
+    itemId: Joi.string().length(24).required().hex().messages({
       "string.empty": "The 'id' feild must be filled",
       "string.length": "The 'id' feild must have 24 characters",
       "string.hex": "The 'id' feild must be a valid hexadecimal value",
@@ -80,5 +95,6 @@ module.exports = {
   validateURL,
   validateUserBody,
   validateUserId,
-  validateUserlogin,
+  validateUserLogin,
+  validateProfileUpdate,
 };
