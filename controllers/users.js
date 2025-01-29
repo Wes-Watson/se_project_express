@@ -50,7 +50,7 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      return res.send({ token });
+      return res.status(200).send({ token });
     })
     .catch((err) => {
       console.error(err);
